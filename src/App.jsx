@@ -2,18 +2,21 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 export default function ReactionGame() {
-    const [color, setColor] = useState("red"); // red = wait, green = click
+    const [color, setColor] = useState("red"); // starting color
     const [startTime, setStartTime] = useState(null);
     const [reactionTime, setReactionTime] = useState(null);
     const [bestTime, setBestTime] = useState(null);
     const [streak, setStreak] = useState(0);
 
+    const colors = ["red", "blue", "yellow", "green"]; // green is clickable
+
     useEffect(() => {
-        if (color === "red") {
-            // Random delay before turning green
+        if (color !== "green") {
             const timeout = setTimeout(() => {
-                setColor("green");
-                setStartTime(Date.now());
+                // pick a random color
+                const nextColor = colors[Math.floor(Math.random() * colors.length)];
+                setColor(nextColor);
+                if (nextColor === "green") setStartTime(Date.now());
             }, Math.random() * 3000 + 1000); // 1-4 seconds
             return () => clearTimeout(timeout);
         }
@@ -23,7 +26,7 @@ export default function ReactionGame() {
         if (color === "green") {
             const time = Date.now() - startTime;
             setReactionTime(time);
-            setColor("red"); // reset color immediately
+            setColor("red"); // reset
 
             // Update best time
             if (!bestTime || time < bestTime) setBestTime(time);
@@ -32,23 +35,22 @@ export default function ReactionGame() {
             if (time <= 500) {
                 setStreak((prev) => prev + 1);
             } else {
-                setStreak(0); // reset streak if reaction > 500ms
+                setStreak(0);
             }
 
-            // Reset displayed reaction time after 1 second
             setTimeout(() => setReactionTime(null), 1000);
         } else {
             alert("Wait for green!");
             setColor("red");
-            setReactionTime(null); // reset text
-            setStreak(0); // reset streak on early click
+            setReactionTime(null);
+            setStreak(0);
         }
     }
 
     return (
         <div className="reaction-container">
             <div className={`reaction-box ${color}`} onClick={handleClick}>
-                {reactionTime !== null ? `${reactionTime} ms` : "Click when green"}
+                {reactionTime !== null ? `${reactionTime} ms` : "Click only on green!"}
             </div>
             <div className="stats">
                 <p>Best Time: {bestTime !== null ? `${bestTime} ms` : "-"}</p>

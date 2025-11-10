@@ -35,6 +35,14 @@
     background-color: green;
 }
 
+.reaction-box.blue {
+    background-color: blue;
+}
+
+.reaction-box.yellow {
+    background-color: yellow;
+}
+
 /* Stats text */
 .stats {
     color: white;
