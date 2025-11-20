@@ -1,88 +1,105 @@
-import { useState, useEffect } from "react";
 import "./App.css";
 
-export default function ReactionGame() {
-    const [color, setColor] = useState("red"); // red = wait, green = click
-    const [startTime, setStartTime] = useState(null);
-    const [reactionTime, setReactionTime] = useState(null);
-    const [bestTime, setBestTime] = useState(null);
-    const [streak, setStreak] = useState(0);
-
-    // For extra reaction stats
-    const [totalReactions, setTotalReactions] = useState(0);
-    const [sumReactionTime, setSumReactionTime] = useState(0);
-
-    const extraColors = ["blue", "yellow", "purple"]; // extra colors to flash before green
-
-    useEffect(() => {
-        if (color === "red") {
-            const shouldFlashExtra = Math.random() < 0.5; // 50% chance
-            if (shouldFlashExtra) {
-                const flashSequence = [];
-                const flashes = Math.floor(Math.random() * 2) + 1; // 1 or 2 flashes
-                for (let i = 0; i < flashes; i++) {
-                    flashSequence.push(extraColors[Math.floor(Math.random() * extraColors.length)]);
-                }
-                flashSequence.push("green"); // always end with green
-
-                let index = 0;
-                const flashNext = () => {
-                    setColor(flashSequence[index]);
-                    if (flashSequence[index] === "green") setStartTime(Date.now());
-                    index++;
-                    if (index < flashSequence.length) {
-                        setTimeout(flashNext, 500);
-                    }
-                };
-                setTimeout(flashNext, Math.random() * 2000 + 500);
-            } else {
-                const timeout = setTimeout(() => {
-                    setColor("green");
-                    setStartTime(Date.now());
-                }, Math.random() * 3000 + 1000);
-                return () => clearTimeout(timeout);
-            }
-        }
-    }, [color]);
-
-    function handleClick() {
-        if (color === "green") {
-            const time = Date.now() - startTime;
-            setReactionTime(time);
-            setColor("red"); // reset color immediately
-
-            // Update best time
-            if (!bestTime || time < bestTime) setBestTime(time);
-
-            // Update streak
-            if (time <= 500) setStreak((prev) => prev + 1);
-            else setStreak(0);
-
-            // Update extra reaction stats
-            setTotalReactions((prev) => prev + 1);
-            setSumReactionTime((prev) => prev + time);
-
-            setTimeout(() => setReactionTime(null), 1000);
-        } else {
-            alert("Wait for green!");
-            setColor("red");
-            setReactionTime(null);
-            setStreak(0);
-        }
-    }
-
-    const averageReaction =
-        totalReactions > 0 ? Math.round(sumReactionTime / totalReactions) : "-";
-
+export default function App() {
     return (
-        <div className="reaction-container">
-            <div className={`reaction-box ${color}`} onClick={handleClick}>
-                {reactionTime !== null ? `${reactionTime} ms` : "Click when green"}
+        <div className="page">
+            <div className="hero">
+                <h1 className="title"> Explore the Art of Filmmaking</h1>
+                <p className="subtitle">
+                    Explore interactive lessons across design, film, and visual storytelling.
+                    Choose a track below to begin learning!
+                </p>
             </div>
-            <div className="stats">
-                <p>Best Time: {bestTime !== null ? `${bestTime} ms` : "-"}</p>
-                <p>Streak: {streak}</p>
-                <p>Average Reaction: {averageReaction !== "-" ? `${averageReaction} ms` : "-"}</p>
+
+            <div className="tracks">
+
+                {/* Original Modules */}
+                <div className="track-card">
+                    <div className="emoji">🎨</div>
+                    <h3>Color Theory</h3>
+                    <p>Learn palettes, contrast, and how color shapes emotion.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">🔤</div>
+                    <h3>Typography</h3>
+                    <p>Understand fonts, hierarchy, and readability in design.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">🎬</div>
+                    <h3>Film Composition</h3>
+                    <p>Study framing, balance, and cinematic visual principles.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                {/* --- New FILM Modules --- */}
+
+                <div className="track-card">
+                    <div className="emoji">🎥</div>
+                    <h3>Cinematography Basics</h3>
+                    <p>Camera angles, shots, and movement to elevate visual storytelling.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">🎞️</div>
+                    <h3>Shot Composition & Framing</h3>
+                    <p>Master rule of thirds, symmetry, balance, and leading lines.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">💡</div>
+                    <h3>Lighting for Film</h3>
+                    <p>Use light to create mood, depth, and emphasis in any scene.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">🎛️</div>
+                    <h3>Color Grading Essentials</h3>
+                    <p>Shape tone and emotion with cinematic color grading techniques.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">🎤</div>
+                    <h3>Sound Design 101</h3>
+                    <p>Learn ambience, SFX, dialogue mixing, and audio storytelling.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">✂️</div>
+                    <h3>Editing & Pacing</h3>
+                    <p>Explore rhythm, transitions, and emotional timing in film editing.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">📝</div>
+                    <h3>Screenwriting Fundamentals</h3>
+                    <p>Write compelling stories with structure, conflict, and strong visuals.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">🎭</div>
+                    <h3>Acting for Camera</h3>
+                    <p>Study performance techniques, blocking, and emotional expression.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
+                <div className="track-card">
+                    <div className="emoji">📽️</div>
+                    <h3>Directing & Visual Style</h3>
+                    <p>How directors define tone, pacing, and cinematic identity.</p>
+                    <button className="track-button">Start Learning</button>
+                </div>
+
             </div>
         </div>
     );
